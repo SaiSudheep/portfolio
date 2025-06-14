@@ -6,26 +6,27 @@ on:
   pull_request:
     branches: [main]
 
-build:
-  runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 22
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build the app
-      run: npm run build
+      - name: Build the app
+        run: npm run build
 
-    - name: Lint
-      run: npm run lint
+      - name: Lint
+        run: npm run lint
 
-    - name: Run tests
-      run: npm test
+      - name: Run tests
+        run: npm test
