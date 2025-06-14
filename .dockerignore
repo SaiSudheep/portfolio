@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# build output
+build
+dist
+
+# local dev files
+.DS_Store
+.env
+*.log
+
+# version control
+.git
+.gitignore
+
+# misc
+.vscode
+.idea
