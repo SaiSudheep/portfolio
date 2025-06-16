@@ -5,7 +5,7 @@ Resources:
   ArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: artifacts-${AWS::AccountId}
+      BucketName: !Sub 'artifacts-${AWS::AccountId}'
 
   CodePipelineServiceRole:
     Type: AWS::IAM::Role
@@ -85,7 +85,7 @@ Resources:
                 Owner: SaiSudheep
                 Repo: portfolio
                 Branch: main
-                OAuthToken: {{resolve:secretsmanager:GitHubToken:SecretString:token}}
+                OAuthToken: !Sub '{{resolve:secretsmanager:GitHubToken:SecretString:token}}'
               OutputArtifacts:
                 - Name: SourceOutput
 
@@ -116,3 +116,4 @@ Resources:
                 ProjectName: !Ref PortfolioDeployProject
               InputArtifacts:
                 - Name: BuildOutput
+              RunOrder: 1
