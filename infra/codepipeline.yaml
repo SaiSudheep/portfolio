@@ -39,6 +39,7 @@ Resources:
       ServiceRole: !GetAtt CodePipelineServiceRole.Arn
       Source:
         Type: CODEPIPELINE
+        BuildSpec: buildspec.yaml
       Artifacts:
         Type: CODEPIPELINE
       Environment:
@@ -46,7 +47,6 @@ Resources:
         Image: aws/codebuild/standard:7.0
         Type: LINUX_CONTAINER
       TimeoutInMinutes: 5
-      BuildSpec: buildspec.yaml
 
   PortfolioDeployProject:
     Type: AWS::CodeBuild::Project
@@ -55,6 +55,7 @@ Resources:
       ServiceRole: !GetAtt CodePipelineServiceRole.Arn
       Source:
         Type: CODEPIPELINE
+        BuildSpec: buildspec-deploy.yaml
       Artifacts:
         Type: CODEPIPELINE
       Environment:
@@ -62,7 +63,6 @@ Resources:
         Image: aws/codebuild/standard:7.0
         Type: LINUX_CONTAINER
       TimeoutInMinutes: 5
-      BuildSpec: buildspec-deploy.yaml
 
   PortfolioPipeline:
     Type: AWS::CodePipeline::Pipeline
