@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Cloudformation template to create an ECR repository for portfolio
+
+Resources:
+  PortfolioECRRepo:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: portfolio
+      ImageScanningConfiguration:
+        scanOnPush: true
+      Tags:
+        - Key: Project
+          Value: Portfolio
