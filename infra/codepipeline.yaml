@@ -116,4 +116,3 @@ Resources:
                 ProjectName: !Ref PortfolioDeployProject
               InputArtifacts:
                 - Name: BuildOutput
-              RunOrder: 1
