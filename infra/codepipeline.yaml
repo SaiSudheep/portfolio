@@ -33,6 +33,8 @@ Resources:
                   - eks:*
                   - cloudformation:*
                   - logs:*
+                  - ec2:*
+                  - iam:*
                 Resource: "*"
 
   PortfolioBuildProject:
