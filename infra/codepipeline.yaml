@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Codepipeline for portfolio
+Description: Codepipeline for Portfolio
 
 Resources:
   ArtifactBucket:
