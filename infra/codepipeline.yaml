@@ -1,0 +1,118 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Codepipeline for portfolio
+
+Resources:
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: artifacts-${AWS::AccountId}
+
+  CodePipelineServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: codepipeline-portfolio-service-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodePipelinePermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codebuild:*
+                  - s3:*
+                  - ecr:*
+                  - eks:*
+                  - cloudformation:*
+                Resource: "*"
+
+  PortfolioBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: portfolio-build-project
+      ServiceRole: !GetAtt CodePipelineServiceRole.Arn
+      Source:
+        Type: CODEPIPELINE
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:7.0
+        Type: LINUX_CONTAINER
+      TimeoutInMinutes: 5
+      BuildSpec: buildspec.yaml
+
+  PortfolioDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: portfolio-deploy-project
+      ServiceRole: !GetAtt CodePipelineServiceRole.Arn
+      Source:
+        Type: CODEPIPELINE
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:7.0
+        Type: LINUX_CONTAINER
+      TimeoutInMinutes: 5
+      BuildSpec: buildspec-deploy.yaml
+
+  PortfolioPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: portfolio-pipeline
+      RoleArn: !GetAtt CodePipelineServiceRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: GitHubSource
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                Owner: SaiSudheep
+                Repo: portfolio
+                Branch: main
+                OAuthToken: {{resolve:secretsmanager:GitHubToken:SecretString:token}}
+              OutputArtifacts:
+                - Name: SourceOutput
+
+        - Name: Build
+          Actions:
+            - Name: BuildApp
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: !Ref PortfolioBuildProject
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+
+        - Name: Deploy
+          Actions:
+            - Name: DeployApp
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: !Ref PortfolioDeployProject
+              InputArtifacts:
+                - Name: BuildOutput
