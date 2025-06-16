@@ -1,4 +1,4 @@
-name: Deploy Infra Stacks
+name: Deploy CodePipeline
 
 on:
   workflow_dispatch:
