@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  variables:
+    AWS_REGION: ap-south-1
+    AWS_ACCOUNT_ID: 079776911671
+
 phases:
   pre_build:
     commands:
