@@ -1,10 +1,10 @@
-name: Deploy ECR Stack
+name: Deploy Infra Stacks
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - infra/ecr-repo.yaml
+      - infra/**.yaml
     branches:
       - main
 
@@ -27,4 +27,11 @@ jobs:
           aws cloudformation deploy \
             --template-file infra/ecr-repo.yaml \
             --stack-name portfolio-ecr \
+            --capabilities CAPABILITY_NAMED_IAM
+
+      - name: Deploy EKS + Fargate Cluster Stack
+        run: |
+          aws cloudformation deploy \
+            --template-file infra/eks-fargate-cluster.yaml \
+            --stack-name portfolio-eks-cluster \
             --capabilities CAPABILITY_NAMED_IAM

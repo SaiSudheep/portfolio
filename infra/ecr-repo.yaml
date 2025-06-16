@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Cloudformation template to create an ECR repository for portfolio
+Description: ECR repository for portfolio
 
 Resources:
   PortfolioECRRepo:
