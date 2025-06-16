@@ -22,16 +22,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Deploy ECR CloudFormation Stack
+      - name: Deploy CodePipeline Stack
         run: |
           aws cloudformation deploy \
-            --template-file infra/ecr-repo.yaml \
-            --stack-name portfolio-ecr \
-            --capabilities CAPABILITY_NAMED_IAM
-
-      - name: Deploy EKS + Fargate Cluster Stack
-        run: |
-          aws cloudformation deploy \
-            --template-file infra/eks-fargate-cluster.yaml \
-            --stack-name portfolio-eks-cluster \
+            --template-file infra/codepipeline.yaml \
+            --stack-name portfolio-codepipeline \
             --capabilities CAPABILITY_NAMED_IAM

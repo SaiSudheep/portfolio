@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - echo Installing frontend dependencies...
+      - npm ci
+
+  pre_build:
+    commands:
+      - echo Running tests...
+      - npm test
+
+  build:
+    commands:
+      - echo Building Portfolio app...
+      - npm run build
+      - echo Creating infrastructure stacks using CloudFormation...
+      - aws cloudformation deploy \
+          --template-file infra/ecr-repo.yaml \
+          --stack-name portfolio-ecr \
+          --capabilities CAPABILITY_NAMED_IAM
+      - aws cloudformation deploy \
+          --template-file infra/eks-fargate-cluster.yaml \
+          --stack-name portfolio-eks \
+          --capabilities CAPABILITY_NAMED_IAM
+
+artifacts:
+  files:
+    - '**/*'
