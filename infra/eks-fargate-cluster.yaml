@@ -24,7 +24,7 @@ Resources:
       EnableDnsSupport: true
       Tags:
         - Key: Name
-        - Value: EKSFargateVPC
+          Value: EKSFargateVPC
 
   Subnet1:
     Type: AWS::EC2::Subnet
@@ -35,7 +35,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-        - Value: EKSFargateSubnet1
+          Value: EKSFargateSubnet1
 
   Subnet2:
     Type: AWS::EC2::Subnet
@@ -46,7 +46,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-        - Value: EKSFargateSubnet2
+          Value: EKSFargateSubnet2
 
   EKSCluster:
     Type: AWS::EKS::Cluster
